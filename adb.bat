@@ -57,18 +57,23 @@ goto home
 
 :Video
 cls
+echo Current directory is: 
 cd
+echo.
 set /p folder= Folder: 
 set /a result= %folder%
 
 mkdir %result%
 cd %result%
+echo Directory set as: 
 cd
+echo.
 
 set /p file= File: 
 set "file=%file%.mp4"
 
-echo %file%
+echo File name set as: %file%
+echo.
 pause
 cls
 
@@ -84,8 +89,8 @@ FOR /F "usebackq" %%A IN ('%file%') DO set size=%%~zA
 
 set /a megabytes = %size% / 1000000
 
-echo Video is %megabytes% MB 
 echo Video is %size% bytes
+echo Video is ~ %megabytes% MB 
 echo.
 
 if %size% LSS %maxbytesize% (
@@ -97,7 +102,7 @@ if %size% LSS %maxbytesize% (
     pause
 ) ELSE (
     echo.File is greater than 10 MB
-    echo.File will be condensed...
+    echo.File will be compressed. . .
     echo.
     pause
 
@@ -108,13 +113,17 @@ if %size% LSS %maxbytesize% (
     echo =====================================
     echo *** FILE SAVED TO FOLDER %result% ***
     echo.
-    FOR /F "usebackq" %%A IN ('%file%') DO set sizee=%%~zA
-    set /a megabytess = %sizee% / 1000000
-    echo %file% compressed to %megabytess% MB
-    echo.
-    pause
-    rem echo the size of compressed file
+
 )
+FOR /F "usebackq" %%A IN ('%file%') DO set sizeNew=%%~zA
+    
+set /a megabytesNew = %sizeNew% / 1000000
+echo %file% compressed to %sizeNew% bytes
+echo %file% compressed to ~ %megabytesNew% MB
+echo.
+pause
+rem echo the size of compressed file
+
 cd ..
 move %result%  C:\Users\Tester\Desktop\ADB\
 cls
