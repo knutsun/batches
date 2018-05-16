@@ -1,22 +1,27 @@
 @echo off
 
+mode con:cols=80 lines=30
+color 02
 
 :home
 echo:
 echo =====================================
-echo          *** OPTIONS ***
+echo          *** MENU ***
 echo: 
 echo 1: Screenshot
 echo 2: Video
 echo 3: Logcat
+echo 33: Clear logcat
 echo 4: Install a build *** MUST HAVE BUILD INSTALLED IN ADB BUILD FOLDER ***
 echo 5: Uninstall a build
 echo 6: Clear cache and force close app
 echo 7: Connect to a device
-echo 8: Set sleep timer to 1 minute
-echo 9: Reset sleep timer to not sleep
+echo 8: Set sleep timer to 30 seconds
+echo 9: Reset sleep timer
+echo.
 echo a: Connect to AndroidTV
 echo f: Connect to FireTV
+echo e: Exit
 echo:
 echo =====================================
 
@@ -30,8 +35,10 @@ if %m%==6 goto clear
 if %m%==7 goto Connect to a device
 if %m%==8 goto sleep
 if %m%==9 goto sleepreset
+if %m%==33 goto logcatClear
 if %m%==a goto android
 if %m%==f goto fire
+if %m%==e goto exitbat
 if %m%==GTR 7 goto no way
 
 :Screenshot
@@ -55,11 +62,10 @@ set /p folder= Folder:
 set /a result= %folder%
 
 mkdir %result%
-
 cd %result%
 cd
-set /p file= File: 
 
+set /p file= File: 
 set "file=%file%.mp4"
 
 echo %file%
@@ -69,9 +75,7 @@ cls
 set maxbytesize=10000000
 
 adb shell screenrecord /sdcard/%file%
-
 adb pull /sdcard/%file%
-
 adb shell rm /sdcard/%file%
 
 cls 
@@ -81,32 +85,38 @@ FOR /F "usebackq" %%A IN ('%file%') DO set size=%%~zA
 set /a megabytes = %size% / 1000000
 
 echo Video is %megabytes% MB 
-
 echo Video is %size% bytes
-
 echo.
-
 
 if %size% LSS %maxbytesize% (
     echo.File is less than 10 MB
-    echo.No condensing required
     echo.
+    echo =====================================
+    echo *** FILE SAVED TO FOLDER %result% ***
+    echo.
+    pause
 ) ELSE (
     echo.File is greater than 10 MB
-    echo.Condensing required
+    echo.File will be condensed...
     echo.
     pause
 
     ffmpeg -i %file% -b:v 1000k -bufsize 10000k condensed_%file%
     del %file% 
     ren condensed_%file% %file%
+    echo.
+    echo =====================================
+    echo *** FILE SAVED TO FOLDER %result% ***
+    echo.
+    FOR /F "usebackq" %%A IN ('%file%') DO set sizee=%%~zA
+    set /a megabytess = %sizee% / 1000000
+    echo %file% compressed to %megabytess% MB
+    echo.
+    pause
+    rem echo the size of compressed file
 )
 cd ..
 move %result%  C:\Users\Tester\Desktop\ADB\
-
-echo =====================================
-echo *** FILE SAVED TO DESKTOP FOLDER *** 
-pause
 cls
 goto home
 
@@ -118,6 +128,14 @@ pause
 adb logcat -d  > C:\Users\Tester\Desktop\ADB\%logname%.txt 
 echo =====================================
 echo *** FILE SAVED TO DESKTOP FOLDER LABELED 'ADB' ***
+pause
+cls
+goto home
+
+:logcatClear
+echo Clear logcat
+adb logcat -c
+echo Logcat has been cleared
 pause
 cls
 goto home
@@ -183,8 +201,8 @@ goto home
 :sleep
 cd C:\adb
 cls
-adb shell settings put secure sleep_timeout 60000
-echo Sleep timer reset to one minute
+adb shell settings put secure sleep_timeout 30000
+echo Sleep timer reset to 30 seconds
 pause
 cls
 goto home
@@ -207,6 +225,7 @@ adb connect 172.27.0.54
 adb devices
 adb shell getprop ro.build.mktg.fireos
 adb shell getprop ro.build.version.release
+echo.
 pause
 cls
 goto home
@@ -220,9 +239,13 @@ adb connect 172.27.5.21
 adb devices
 adb shell getprop ro.build.mktg.fireos
 adb shell getprop ro.build.version.release
+echo.
 pause
 cls
 goto home
+
+:exitbat
+EXIT
 
 :no way
 echo:
