@@ -2,26 +2,22 @@
 setlocal EnableExtensions EnableDelayedExpansion
 
 set i=0
-for /f "tokens=1*delims=-" %%a in (testHours.txt) do (
+set /a x=0
+set /a timeCounter=0
+for /f "tokens=1*delims=*" %%a in (test.txt) do (
+	set build=%%a
+	set build=!build:~6,5!
+	echo !build!
 	set timeVar=%%b
-	set timeInt=!timeVar::=!
-	rem set /a tempIndex=1
-	rem set prevTime=[tempIndex] !timeInt!
-	rem set build=%%a
-	rem echo !build!
-	rem set dontInclude=Build
-	rem set replaceWith=
-	rem set build=%build:dontInclude=!replaceWith!% 
-	rem echo !build!
 	rem echo !timeVar!
-	rem set timeVariable=[!i!] !timeVar::=!
-	set /a totalTime= timeInt - prevTime
-	rem echo !totalTime! >> hours.txt
-	rem echo !timeVariable!
+	set timeInt=!timeVar::=!
+	set /a tempTime=!timeVar::=!
+	set /a timeDifference= timeInt - prevTime
+	echo time difference is !timeDifference!
 	set prevTime=!timeVar::=!
-	rem echo previous is: !prevTime!
-	set calcForBuild=!totalTime!
-	echo !calcForBuild!
+	rem echo %timeCounter%
+	set /a timeCounter=timeCounter + !timeDifference!
+	echo !timeCounter!
 	set /A i+=1
 
 )
