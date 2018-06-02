@@ -6,7 +6,6 @@ set /A i=1
 set /a timeCounter=0
 for /F "usebackq tokens=1*delims=*" %%a in ("%file%") do (
 set timeVar=%%b 
-set currentTime=!timeVar::=!
 
 set currentHour=%%b
 set currentHour=!currentHour:~0,2!
@@ -33,8 +32,6 @@ if !i! EQU !sum! (
 	set /a timeCounter=timeCounter + timeDifference
 	)
 
-call set array[%%i%%]=%%b
-call set n=%%i%%
 set /A i+=1
 )
 
