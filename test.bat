@@ -24,18 +24,18 @@ for /F "usebackq tokens=1*delims=*" %%a in ("%file%") do (
 	set /a divnumber=!i!/2
 	set /a sum=!divnumber!*2
 
-if !i! NEQ !sum! (
-	set /a prevHour=!currentHour!
-	set /a prevMinute=!currentMinute!
-	set /a prevTime=!prevHour!*60
-	set /a prevTime=!prevTime!+!prevMinute!
+	if !i! NEQ !sum! (
+		set /a prevHour=!currentHour!
+		set /a prevMinute=!currentMinute!
+		set /a prevTime=!prevHour!*60
+		set /a prevTime=!prevTime!+!prevMinute!
 	)
-if !i! EQU !sum! (
-	set /a timeDifference= currentTime - prevTime
-	set /a timeCounter=timeCounter + timeDifference
+	if !i! EQU !sum! (
+		set /a timeDifference= currentTime - prevTime
+		set /a timeCounter=timeCounter + timeDifference
 	)
 
-set /A i+=1
+	set /A i+=1
 )
 
 echo Total time for !build! is !timeCounter! minutes
