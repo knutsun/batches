@@ -2,7 +2,7 @@
 setlocal EnableExtensions EnableDelayedExpansion
 
 set "file=test.txt"
-set /A i=0
+set /A i=1
 set /a timeCounter=0
 for /F "usebackq tokens=1*delims=*" %%a in ("%file%") do (
 set timeVar=%%b 
@@ -13,8 +13,17 @@ echo !build!
 echo.
 echo !currentTime! is at index !i!
 echo previous time is !currentTime!
-if !i!==0,2,4,6 (
+
+set /a divnumber=!i!/2
+rem echo !divnumber!
+set /a sum=!divnumber!*2
+if !i! NEQ !sum! goto odds
+if !i! EQU !sum! goto evens
+
+
+if !i!==!index! (
 	set /a prevTime=!currentTime!
+	echo prev time is !prevTime!
 	echo.
 ) else (
 	set /a timeDifference= currentTime - prevTime
@@ -23,6 +32,7 @@ if !i!==0,2,4,6 (
 	echo total time is !timeCounter!
 	echo.
 )
+:continue
 call set array[%%i%%]=%%b
 call set n=%%i%%
 set /A i+=1
@@ -35,3 +45,15 @@ rem 		echo this is it
 rem 		pause
 rem 	)
 pause
+
+:odds
+	set /a index=0
+	echo set to one for odd
+	pause
+	goto continue
+
+:evens
+	set /a index=1
+	echo set to two for even
+	pause
+	goto continue
