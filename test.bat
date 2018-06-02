@@ -15,24 +15,38 @@ echo !currentTime! is at index !i!
 echo previous time is !currentTime!
 
 set /a divnumber=!i!/2
-rem echo !divnumber!
+rem echo div number is !divnumber!
 set /a sum=!divnumber!*2
-if !i! NEQ !sum! goto odds
-if !i! EQU !sum! goto evens
+rem echo sum is !sum!
 
-
-if !i!==!index! (
+if !i! NEQ !sum! (
+	echo ITS ODD
 	set /a prevTime=!currentTime!
 	echo prev time is !prevTime!
 	echo.
-) else (
+	)
+if !i! EQU !sum! (
+	echo ITS EVEN
 	set /a timeDifference= currentTime - prevTime
 	set /a timeCounter=timeCounter + timeDifference
 	echo time difference is !timeDifference!
 	echo total time is !timeCounter!
 	echo.
-)
-:continue
+	)
+
+
+rem if !i!==!index! (
+rem 	set /a prevTime=!currentTime!
+rem 	echo prev time is !prevTime!
+rem 	echo.
+rem ) else (
+rem 	set /a timeDifference= currentTime - prevTime
+rem 	set /a timeCounter=timeCounter + timeDifference
+rem 	echo time difference is !timeDifference!
+rem 	echo total time is !timeCounter!
+rem 	echo.
+rem )
+
 call set array[%%i%%]=%%b
 call set n=%%i%%
 set /A i+=1
@@ -46,14 +60,14 @@ rem 		pause
 rem 	)
 pause
 
-:odds
-	set /a index=0
-	echo set to one for odd
-	pause
-	goto continue
+rem :odds
+rem 	set /a index=0
+rem 	echo set to one for odd
+rem 	pause
+rem 	goto continue
 
-:evens
-	set /a index=1
-	echo set to two for even
-	pause
-	goto continue
+rem :evens
+rem 	set /a index=1
+rem 	echo set to two for even
+rem 	pause
+rem 	goto continue
