@@ -7,6 +7,17 @@ set /a timeCounter=0
 for /F "usebackq tokens=1*delims=*" %%a in ("%file%") do (
 set timeVar=%%b 
 set currentTime=!timeVar::=!
+
+set currentHour=%%b
+set currentHour=!currentHour:~0,2!
+echo current hour is !currentHour!
+set currentMinute=%%b
+set currentMinute=!currentMinute:~3,4!
+echo current minute is !currentMinute!
+set /a currentTime=!currentHour!*60
+set /a currentTime=!currentTime!+!currentMinute!
+
+
 set build=%%a
 set build=!build:~6,5!
 echo !build!
@@ -21,13 +32,20 @@ rem echo sum is !sum!
 
 if !i! NEQ !sum! (
 	echo ITS ODD
-	set /a prevTime=!currentTime!
+	set /a prevHour=!currentHour!
+	set /a prevMinute=!currentMinute!
+	rem set /a prevTime=!currentTime!
+	echo prev time is !prevHour! and !prevMinute!
+	set /a prevTime=!prevHour!*60
+	set /a prevTime=!prevTime!+!prevMinute!
 	echo prev time is !prevTime!
 	echo.
 	)
 if !i! EQU !sum! (
 	echo ITS EVEN
 	set /a timeDifference= currentTime - prevTime
+	rem set /a timeDifference=((currentHour*60)+currentMinute) - ((prevHour*60)+prevMinute)
+
 	set /a timeCounter=timeCounter + timeDifference
 	echo time difference is !timeDifference!
 	echo total time is !timeCounter!
