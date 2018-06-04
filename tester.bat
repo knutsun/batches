@@ -1,33 +1,50 @@
 @echo off
 setlocal EnableExtensions EnableDelayedExpansion
 
-set "file=test.txt"
-set /A i=0
+set "file=testHours.txt"
+set /A i=1
+set /a timeCounter=0
+
+
 
 for /F "usebackq tokens=1*delims=*" %%a in ("%file%") do (
-set timeVar=%%b 
-set timeInt=!timeVar::=!
-set build=%%a
-set build=!build:~6,5!
-echo !build!
-echo !timeInt! is at index !i!
-set /a prevTime=!timeInt!
-echo previous time is !prevTime!
-if !i!==0 (
-	echo Don't include this value
-) else (
-	set /a timeDifference= timeInt - prevTime
-	echo time difference is !timeDifference!
-)
-call set array[%%i%%]=%%b
-call set n=%%i%%
-set /A i+=1
+
+	set timeVar=%%b 
+	set currentHour=%%b
+	set currentHour=!currentHour:~0,2!
+	set currentMinute=%%b
+	set currentMinute=!currentMinute:~3,4!
+	set /a currentTime=!currentHour!*60
+	set /a currentTime=!currentTime!+!currentMinute!
+
+
+	set build=%%a
+	set build=!build:~6,5!
+
+	set /a divnumber=!i!/2
+	set /a sum=!divnumber!*2
+
+	if !i! NEQ !sum! (
+		set /a prevHour=!currentHour!
+		set /a prevMinute=!currentMinute!
+		set /a prevTime=!prevHour!*60
+		set /a prevTime=!prevTime!+!prevMinute!
+	)
+	if !i! EQU !sum! (
+		set /a timeDifference= currentTime - prevTime
+		set /a timeCounter=timeCounter + timeDifference
+	)
+
+	set /A i+=1
 )
 
-rem prints out each line of text file as an array
-rem for /L %%i in (1,1,%n%) do call echo %%array[%%i]%% 
-rem 	if %%array[%%i]%% == %%array[%%i]%% (
-rem 		echo this is it
-rem 		pause
-rem 	)
+
+set /a timeInMinutes=!timeCounter!*100
+SET /A hours=!timeInMinutes!/60
+ECHO Hours: %hours:~0,1%.%hours:~1,2%
+echo.
+
+echo Total time for !build! is %hours:~0,1%.%hours:~1,2% hours or !timeCounter! minutes
+echo.
+
 pause
