@@ -1,6 +1,6 @@
 @echo off
 
-mode con:cols=80 lines=30
+mode con:cols=70 lines=25
 color 02
 
 :home
@@ -12,7 +12,7 @@ echo 1: Screenshot
 echo 2: Video
 echo 3: Logcat
 echo 33: Clear logcat
-echo 4: Install a build *** MUST HAVE BUILD INSTALLED IN ADB BUILD FOLDER ***
+echo 4: Install a build
 echo 5: Uninstall a build
 echo 6: Clear cache and force close app
 echo 7: Connect to a device
@@ -20,7 +20,9 @@ echo 8: Set sleep timer to 30 seconds
 echo 9: Reset sleep timer
 echo.
 echo a: Connect to AndroidTV
-echo f: Connect to FireTV
+echo f: Connect to FireTV Gen 1 box
+echo ff: Connect to FireTV Cube
+echo fw: Connect to FireTV Cube wifi
 echo e: Exit
 echo:
 echo =====================================
@@ -38,8 +40,11 @@ if %m%==9 goto sleepreset
 if %m%==33 goto logcatClear
 if %m%==a goto android
 if %m%==f goto fire
+if %m%==ff goto firecube
+if %m%==fw goto firecubew
 if %m%==e goto exitbat
 if %m%==GTR 7 goto no way
+
 
 :Screenshot
 echo Screenshot:
@@ -57,22 +62,15 @@ goto home
 
 :Video
 cls
-echo Current directory is: 
-cd
-echo.
 set /p folder= Folder: 
 set /a result= %folder%
-
 mkdir %result%
 cd %result%
-echo Directory set as: 
-cd
-echo.
 
 set /p file= File: 
 set "file=%file%.mp4"
-
-echo File name set as: %file%
+echo.
+echo %file% will be saved to folder %folder%
 echo.
 pause
 cls
@@ -100,8 +98,11 @@ if %size% LSS %maxbytesize% (
     echo *** FILE SAVED TO FOLDER %result% ***
     echo.
     pause
+    echo.
 ) ELSE (
     echo.File is greater than 10 MB
+    echo.
+    echo Do you want to compress this file?
     echo.File will be compressed. . .
     echo.
     pause
@@ -114,6 +115,7 @@ if %size% LSS %maxbytesize% (
     echo *** FILE SAVED TO FOLDER %result% ***
     echo.
 
+
 )
 FOR /F "usebackq" %%A IN ('%file%') DO set sizeNew=%%~zA
     
@@ -122,7 +124,6 @@ echo %file% compressed to %sizeNew% bytes
 echo %file% compressed to ~ %megabytesNew% MB
 echo.
 pause
-rem echo the size of compressed file
 
 cd ..
 move %result%  C:\Users\Tester\Desktop\ADB\
@@ -153,7 +154,6 @@ goto home
 cd C:\adb
 cls
 echo *** MAKE SURE THE BUILD IS IN THE ADB BUILD FOLDER! ***
-echo .APK is already added!
 echo =====================================
 echo:
 echo Build Names
@@ -162,7 +162,7 @@ echo:
 echo =====================================
 set /p build= ""
 cls
-adb install -r c:\adb\builds\%build%.apk
+adb install -r c:\adb\builds\%build%
 pause
 cls
 goto home
@@ -230,7 +230,8 @@ cd C:\adb
 cls
 @echo off
 adb kill-server
-adb connect 172.27.0.54
+adb start-server
+adb connect 172.27.4.42
 adb devices
 adb shell getprop ro.build.mktg.fireos
 adb shell getprop ro.build.version.release
@@ -245,6 +246,36 @@ cls
 @echo off
 adb kill-server
 adb connect 172.27.5.21
+adb devices
+adb shell getprop ro.build.mktg.fireos
+adb shell getprop ro.build.version.release
+echo.
+pause
+cls
+goto home
+
+:firecube
+cd C:\adb
+cls
+@echo off
+adb kill-server
+adb start-server
+adb connect 172.27.5.56
+adb devices
+adb shell getprop ro.build.mktg.fireos
+adb shell getprop ro.build.version.release
+echo.
+pause
+cls
+goto home
+
+:firecubew
+cd C:\adb
+cls
+@echo off
+adb kill-server
+adb start-server
+adb connect 172.27.5.55
 adb devices
 adb shell getprop ro.build.mktg.fireos
 adb shell getprop ro.build.version.release
