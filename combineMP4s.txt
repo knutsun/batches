@@ -1,0 +1,2 @@
+file 'C:\Users\Tester\Desktop\adb\1231\FTVGen1Cube_DJR.mp4'
+file 'C:\Users\Tester\Desktop\adb\1231\FTVGen1Cube_DJR2.mp4'
